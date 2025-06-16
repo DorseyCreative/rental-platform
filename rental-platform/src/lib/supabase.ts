@@ -95,3 +95,24 @@ export interface Rental {
   created_at: string
   updated_at: string
 }
+
+// Database utility functions
+export async function getBusiness(id: string): Promise<Business | null> {
+  try {
+    const { data, error } = await supabase
+      .from('businesses')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (error) {
+      console.error('Error fetching business:', error)
+      return null
+    }
+    
+    return data
+  } catch (error) {
+    console.error('Error fetching business:', error)
+    return null
+  }
+}

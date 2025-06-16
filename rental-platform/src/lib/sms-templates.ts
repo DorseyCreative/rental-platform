@@ -18,7 +18,15 @@ export function getTemplateMessage(
   ...args: string[]
 ): string {
   const template = messageTemplates[type]
-  return template ? template(businessName, ...args) : ''
+  if (!template) return ''
+  
+  try {
+    // Use apply to safely spread arguments
+    return template.apply(null, [businessName, ...args] as any)
+  } catch (error) {
+    console.error('Error generating SMS template:', error)
+    return ''
+  }
 }
 
 export type SMSTemplateType = keyof typeof messageTemplates

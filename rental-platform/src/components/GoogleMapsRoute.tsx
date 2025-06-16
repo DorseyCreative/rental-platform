@@ -184,7 +184,7 @@ export default function GoogleMapsRoute({ stops, onRouteOptimized }: GoogleMapsR
         const optimizedOrder = response.routes[0].waypoint_order
         const optimizedStops = [
           geocodedStops[0],
-          ...optimizedOrder.map(index => geocodedStops[index + 1]),
+          ...optimizedOrder.map((index: number) => geocodedStops[index + 1]),
           geocodedStops[geocodedStops.length - 1],
         ]
         onRouteOptimized(optimizedStops)

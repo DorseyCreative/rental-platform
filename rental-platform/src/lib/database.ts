@@ -290,7 +290,7 @@ function createDemoStats(businessType: string) {
     custom: { equipment: 42, customers: 78, rentals: 15, revenue: 34500 }
   }
 
-  const stats = baseStats[businessType] || baseStats.custom
+  const stats = baseStats[businessType as keyof typeof baseStats] || baseStats.custom
   return {
     totalEquipment: stats.equipment,
     totalCustomers: stats.customers,

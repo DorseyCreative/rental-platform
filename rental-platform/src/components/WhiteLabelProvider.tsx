@@ -64,12 +64,12 @@ export function WhiteLabelProvider({ children, businessSlug }: WhiteLabelProvide
           
           // Generate theme from business branding
           const newTheme: WhiteLabelTheme = {
-            primaryColor: businessData.branding?.primary_color || defaultTheme.primaryColor,
-            secondaryColor: businessData.branding?.secondary_color || defaultTheme.secondaryColor,
-            logoUrl: businessData.branding?.logo_url,
+            primaryColor: businessData.branding?.primaryColor || defaultTheme.primaryColor,
+            secondaryColor: businessData.branding?.secondaryColor || defaultTheme.secondaryColor,
+            logoUrl: businessData.branding?.logoUrl,
             businessName: businessData.name,
-            accentColor: generateAccentColor(businessData.branding?.primary_color || defaultTheme.primaryColor),
-            textColor: generateTextColor(businessData.branding?.primary_color || defaultTheme.primaryColor),
+            accentColor: generateAccentColor(businessData.branding?.primaryColor || defaultTheme.primaryColor),
+            textColor: generateTextColor(businessData.branding?.primaryColor || defaultTheme.primaryColor),
             backgroundColor: '#FFFFFF'
           }
           

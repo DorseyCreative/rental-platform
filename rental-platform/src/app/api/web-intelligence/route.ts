@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-})
+import { getAnthropicClient } from '@/lib/anthropic'
 
 interface WebIntelligenceRequest {
   businessName: string
@@ -16,8 +12,8 @@ interface WebIntelligenceRequest {
 interface WebIntelligenceResult {
   reputationScore: number
   googleReviews: {
-    rating: number
-    reviewCount: number
+    rating: number | null
+    reviewCount: number | null
     recentReviews: Array<{
       rating: number
       text: string
@@ -27,15 +23,15 @@ interface WebIntelligenceResult {
   }
   socialMedia: {
     facebook: {
-      followers: number
-      engagement: number
-      lastPost: string
-      verified: boolean
+      followers: number | null
+      engagement: number | null
+      lastPost: string | null
+      verified: boolean | null
     }
     linkedin: {
-      connections: number
-      employees: number
-      verified: boolean
+      connections: number | null
+      employees: number | null
+      verified: boolean | null
     }
     instagram?: {
       followers: number
@@ -116,10 +112,22 @@ export async function POST(request: Request) {
     const result: WebIntelligenceResult = {
       reputationScore,
       googleReviews: reviewData.google,
-      socialMedia: socialData,
+      socialMedia: {
+        facebook: {
+          followers: (socialData as any).facebook?.followers || null,
+          engagement: (socialData as any).facebook?.engagement || null,
+          lastPost: (socialData as any).facebook?.lastPost || null,
+          verified: (socialData as any).facebook?.verified || null
+        },
+        linkedin: {
+          connections: (socialData as any).linkedin?.connections || null,
+          employees: (socialData as any).linkedin?.employees || null,
+          verified: (socialData as any).linkedin?.verified || null
+        }
+      },
       onlinePresence: {
-        bbcRating: reviewData.bbb?.rating,
-        yelpRating: reviewData.yelp?.rating,
+        bbcRating: reviewData.bbb?.rating || undefined,
+        yelpRating: reviewData.yelp?.rating || undefined,
         industryListings: webData.industryListings,
         newsArticles: mediaData.articles
       },
@@ -378,14 +386,19 @@ Respond with a JSON object containing:
 }
 `
 
-    const response = await anthropic.messages.create({
+    const anthropic = getAnthropicClient()
+    if (!anthropic) {
+      throw new Error('Anthropic API not configured')
+    }
+
+    const response = await anthropic!.beta.messages.create({
       model: 'claude-3-haiku-20240307',
       max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }]
     })
 
     const aiResponse = response.content[0]
-    if (aiResponse.type !== 'text') {
+    if (aiResponse?.type !== 'text') {
       throw new Error('Invalid AI response format')
     }
 
@@ -394,24 +407,24 @@ Respond with a JSON object containing:
     console.error('AI analysis failed:', error)
     // Fallback analysis
     return {
-      overallSentiment: 'neutral',
+      overallSentiment: 'neutral' as const,
       competitorAnalysis: {
-        marketPosition: 'challenger',
+        marketPosition: 'challenger' as const,
         strengthsVsCompetitors: ['Good equipment quality', 'Responsive service'],
         improvementAreas: ['Online presence', 'Review management']
       },
       recommendations: [
         {
-          category: 'social',
-          priority: 'high',
+          category: 'social' as const,
+          priority: 'high' as const,
           title: 'Increase Social Media Activity',
           description: 'Post regular updates and engage with customers on social platforms',
           estimatedImpact: 'Increase brand awareness by 25%',
           timeframe: '2-3 months'
         },
         {
-          category: 'reviews',
-          priority: 'medium', 
+          category: 'reviews' as const,
+          priority: 'medium' as const, 
           title: 'Implement Review Management System',
           description: 'Actively request and respond to customer reviews',
           estimatedImpact: 'Improve review rating by 0.5 stars',

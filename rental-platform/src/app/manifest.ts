@@ -44,14 +44,12 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         src: '/screenshot-mobile.png',
         sizes: '390x844',
-        type: 'image/png',
-        form_factor: 'narrow'
+        type: 'image/png'
       },
       {
         src: '/screenshot-desktop.png',
         sizes: '1280x720',
-        type: 'image/png',
-        form_factor: 'wide'
+        type: 'image/png'
       }
     ],
     shortcuts: [

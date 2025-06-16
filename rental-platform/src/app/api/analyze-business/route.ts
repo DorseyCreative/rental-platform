@@ -1,14 +1,5 @@
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
-
-const API_KEY = process.env.ANTHROPIC_API_KEY
-
-let anthropic: Anthropic | null = null
-if (API_KEY) {
-  anthropic = new Anthropic({
-    apiKey: API_KEY,
-  })
-}
+import { getAnthropicClient } from '@/lib/anthropic'
 
 interface AnalysisRequest {
   websiteUrl: string
@@ -205,10 +196,71 @@ export async function POST(request: Request) {
 
     let analysisData
 
-    // AI analysis temporarily disabled for build compatibility
-    if (false) {
-      // AI analysis code temporarily disabled for build compatibility
-      console.log('AI analysis disabled for deployment')
+    // Try AI analysis with real content if available
+    const anthropic = getAnthropicClient()
+    if (websiteContent && anthropic) {
+      try {
+        const prompt = `You are analyzing the website ${websiteUrl} for a business intelligence system. Extract REAL, ACCURATE information only.
+
+Website Content: ${websiteContent}
+
+CRITICAL REQUIREMENTS:
+1. Extract the ACTUAL business name from the website
+2. Determine business type based on CONTENT ANALYSIS, not assumptions
+3. Find REAL contact information (email, phone, address)
+4. Extract ACTUAL brand colors from the website's CSS/styling
+5. Identify the company's actual services/products
+6. Write a description based on their actual about page or content
+7. Look for equipment types, rental categories, service areas
+
+For business type, analyze the content for these keywords:
+- Heavy equipment: excavator, bulldozer, crane, backhoe, skid steer, construction equipment
+- Party rental: tent, table, chair, wedding, event, party supplies
+- Tool rental: drill, saw, hammer, power tools, hand tools
+- Car rental: vehicle, car, truck, auto, transportation
+
+Return ONLY valid JSON:
+{
+  "name": "EXACT business name from website header/title",
+  "type": "heavy_equipment|party_rental|car_rental|tool_rental|custom",
+  "industry": "Specific industry based on actual content",
+  "email": "REAL email found on contact page or footer",
+  "phone": "REAL phone number from contact info", 
+  "address": "REAL address from contact/location page",
+  "description": "2-3 sentence description based on their actual about/services content",
+  "features": ["List 5-6 ACTUAL services/features mentioned on their website"],
+  "branding": {
+    "primaryColor": "Extract dominant color from website design",
+    "secondaryColor": "Extract accent color from website design",
+    "logoUrl": "Direct URL to their logo image if found"
+  },
+  "confidence": "Rate 1-100 based on content quality and information found",
+  "businessDetails": {
+    "servicesOffered": ["List specific services they mention"],
+    "serviceAreas": ["Geographic areas they serve if mentioned"],
+    "yearEstablished": "Year founded if mentioned",
+    "specialties": ["Any specializations or unique offerings"]
+  }
+}`
+
+        const response = await anthropic!.beta.messages.create({
+          model: 'claude-3-5-sonnet-20241022',
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+
+        const aiText = response.content[0]?.type === 'text' ? response.content[0].text : ''
+        console.log('AI Response:', aiText.substring(0, 200))
+        
+        const jsonMatch = aiText.match(/\{[\s\S]*\}/)
+        if (jsonMatch) {
+          analysisData = JSON.parse(jsonMatch[0])
+          if (logoUrl) analysisData.branding.logoUrl = logoUrl
+          console.log('✅ AI Analysis successful:', analysisData.name)
+        }
+      } catch (aiError) {
+        console.log('AI analysis failed:', aiError instanceof Error ? aiError.message : 'Unknown error')
+      }
     }
 
     // Fallback to content-based analysis

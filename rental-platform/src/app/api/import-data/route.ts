@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { parse } from 'csv-parse/sync'
-import Anthropic from '@anthropic-ai/sdk'
+import { getAnthropicClient } from '@/lib/anthropic'
 
 interface ImportRequest {
   businessId?: string
@@ -19,9 +19,6 @@ interface ImportResult {
   skipped: number
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-})
 
 export async function POST(request: Request) {
   try {
@@ -326,15 +323,64 @@ Original URL: ${originalUrl}`
 }
 
 async function analyzeDataWithAI(headers: string[], sampleData: any[], importType: string) {
-  // AI analysis temporarily disabled for build compatibility
-  console.log('AI analysis disabled for deployment')
-  
-  // Return basic mapping as fallback
-  return {
-    detectedType: importType,
-    confidence: 60,
-    mapping: createBasicMapping(headers, importType),
-    suggestions: ['AI analysis disabled for deployment, using basic field mapping']
+  try {
+    const anthropic = getAnthropicClient()
+    if (!anthropic) {
+      throw new Error('Anthropic API not configured')
+    }
+
+    const prompt = `
+You are analyzing data for import into a heavy equipment rental management system.
+
+Import Type: ${importType}
+Available Columns: ${headers.join(', ')}
+Sample Data (first few rows):
+${JSON.stringify(sampleData, null, 2)}
+
+Based on the column names and sample data, please:
+1. Identify what type of data this appears to be (equipment, customers, rentals, etc.)
+2. Map columns to appropriate database fields for a ${importType} import
+3. Provide confidence score (0-100)
+4. Suggest any data transformations needed
+
+For ${importType} imports, the expected database fields are:
+${getExpectedFields(importType).join(', ')}
+
+Please respond with a JSON object containing:
+{
+  "detectedType": "equipment|customers|rentals",
+  "confidence": 85,
+  "mapping": {
+    "source_column": "database_field"
+  },
+  "suggestions": ["suggestion1", "suggestion2"]
+}
+`
+
+    const response = await anthropic!.beta.messages.create({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+
+    const aiResponse = response.content[0]
+    if (aiResponse?.type !== 'text') {
+      throw new Error('Invalid AI response format')
+    }
+
+    const analysis = JSON.parse(aiResponse.text)
+    console.log('🤖 AI Analysis Result:', analysis)
+    
+    return analysis
+  } catch (error) {
+    console.error('❌ AI analysis failed:', error instanceof Error ? error.message : 'Unknown error')
+    // Fallback to basic mapping if AI fails
+    return {
+      detectedType: importType,
+      confidence: 60,
+      mapping: createBasicMapping(headers, importType),
+      suggestions: ['AI analysis unavailable, using basic field mapping']
+    }
   }
 }
 

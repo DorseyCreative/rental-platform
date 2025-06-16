@@ -208,7 +208,7 @@ export default function EquipmentPage() {
     return matchesSearch && matchesStatus && matchesCategory
   })
 
-  const categories = [...new Set(equipment.map(item => item.category))]
+  const categories = Array.from(new Set(equipment.map(item => item.category)))
   const equipmentStats = {
     total: equipment.length,
     available: equipment.filter(e => e.status === 'available').length,
