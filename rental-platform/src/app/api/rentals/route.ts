@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
         business_id,
         customer_id,
         equipment_id,
-        rental_number,
+        rental_number: rentalNumber,
         start_date,
         end_date,
         daily_rate: parseFloat(daily_rate),

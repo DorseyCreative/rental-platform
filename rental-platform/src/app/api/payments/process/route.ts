@@ -186,16 +186,19 @@ export async function POST(request: Request) {
     console.error('❌ Payment processing failed:', error)
     
     // Handle specific Stripe errors
-    if (error.type === 'StripeCardError') {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Payment failed',
-          message: error.message,
-          code: error.code
-        },
-        { status: 402 }
-      )
+    if (error && typeof error === 'object' && 'type' in error) {
+      const stripeError = error as any
+      if (stripeError.type === 'StripeCardError') {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Payment failed',
+            message: stripeError.message,
+            code: stripeError.code
+          },
+          { status: 402 }
+        )
+      }
     }
 
     return NextResponse.json(
@@ -249,8 +252,7 @@ export async function PUT(request: Request) {
         await supabase
           .from('payments')
           .update({ 
-            status: 'succeeded',
-            stripe_fee: paymentIntent.charges.data[0]?.balance_transaction 
+            status: 'succeeded'
           })
           .eq('stripe_payment_intent_id', paymentIntent.id)
 
