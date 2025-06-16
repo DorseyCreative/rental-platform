@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
+// For static export compatibility
+export async function generateStaticParams() {
+  // Return empty array for static build - these API routes won't work in static context anyway
+  return []
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

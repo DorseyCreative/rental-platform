@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getBusinessById, getBusinessStats } from '@/lib/database'
 
+// For static export compatibility
+export async function generateStaticParams() {
+  return []
+}
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }

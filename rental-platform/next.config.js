@@ -11,11 +11,13 @@ const nextConfig = {
   output: process.env.GITHUB_PAGES === 'true' ? 'export' : undefined,
   trailingSlash: process.env.GITHUB_PAGES === 'true',
   distDir: 'out',
-  // Disable server-side features for static export
+  
+  // For GitHub Pages static export, disable problematic features
   ...(process.env.GITHUB_PAGES === 'true' && {
     images: {
       unoptimized: true,
     },
+    generateBuildId: async () => 'github-pages-build',
   }),
 }
 
