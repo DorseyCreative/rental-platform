@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Rental Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            max-width: 400px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .offline-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+        
+        .retry-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .feature-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 480px) {
+            .offline-container {
+                margin: 20px;
+                padding: 30px 16px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .offline-icon {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📱</div>
+        <h1>You're Offline</h1>
+        <p>No internet connection detected. The app is running in offline mode with limited functionality.</p>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            Try Again
+        </button>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">✅</span>
+                View cached delivery schedule
+            </div>
+            <div class="feature">
+                <span class="feature-icon">✅</span>
+                Complete offline deliveries
+            </div>
+            <div class="feature">
+                <span class="feature-icon">✅</span>
+                Capture signatures & photos
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🔄</span>
+                Auto-sync when online
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-retry when online
+        window.addEventListener('online', () => {
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        })
+        
+        // Show connection status
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+                window.location.reload()
+            }
+        }
+        
+        window.addEventListener('online', updateConnectionStatus)
+        window.addEventListener('offline', updateConnectionStatus)
+        
+        // Check periodically
+        setInterval(() => {
+            if (navigator.onLine) {
+                fetch('/', { method: 'HEAD', cache: 'no-cache' })
+                    .then(() => {
+                        window.location.reload()
+                    })
+                    .catch(() => {
+                        // Still offline
+                    })
+            }
+        }, 30000) // Check every 30 seconds
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+[
+  {
+    "id": "biz_1750001302573_pvjs39xae",
+    "name": "Houseofrental",
+    "type": "party_rental",
+    "industry": "Event & Party Services",
+    "website": "https://www.houseofrental.com",
+    "email": "contact@www.houseofrental.com",
+    "phone": "847-677-2010",
+    "address": "Address available on website",
+    "description": "Professional party rental services",
+    "features": [
+      "Event Planning",
+      "Setup Services",
+      "Delivery & Pickup",
+      "Inventory Management",
+      "Customer Portal"
+    ],
+    "branding": {
+      "primaryColor": "#E91E63",
+      "secondaryColor": "#673AB7"
+    },
+    "confidence": 85,
+    "business_details": {},
+    "reputation_score": 0,
+    "web_intelligence": {},
+    "status": "active",
+    "created_at": "2025-06-15T15:28:22.573Z",
+    "updated_at": "2025-06-15T15:28:22.573Z"
+  },
+  {
+    "id": "biz_1750025356783_k45il7yhj",
+    "name": "Houseofrental",
+    "type": "party_rental",
+    "industry": "Event & Party Services",
+    "website": "https://www.houseofrental.com/",
+    "email": "contact@www.houseofrental.com",
+    "phone": "847-677-2010",
+    "address": "Address available on website",
+    "description": "Professional party rental services",
+    "features": [
+      "Event Planning",
+      "Setup Services",
+      "Delivery & Pickup",
+      "Inventory Management",
+      "Customer Portal"
+    ],
+    "branding": {
+      "primaryColor": "#E91E63",
+      "secondaryColor": "#673AB7"
+    },
+    "confidence": 85,
+    "business_details": {},
+    "reputation_score": 0,
+    "web_intelligence": {},
+    "status": "active",
+    "created_at": "2025-06-15T22:09:16.784Z",
+    "updated_at": "2025-06-15T22:09:16.788Z"
+  },
+  {
+    "id": "biz_1750044352553_snm72mpt6",
+    "name": "Houseofrental",
+    "type": "party_rental",
+    "industry": "Event & Party Services",
+    "website": "https://www.houseofrental.com/",
+    "email": "contact@www.houseofrental.com",
+    "phone": "847-677-2010",
+    "address": "Address available on website",
+    "description": "Professional party rental services",
+    "features": [
+      "Event Planning",
+      "Setup Services",
+      "Delivery & Pickup",
+      "Inventory Management",
+      "Customer Portal"
+    ],
+    "branding": {
+      "primaryColor": "#E91E63",
+      "secondaryColor": "#673AB7"
+    },
+    "confidence": 85,
+    "business_details": {},
+    "reputation_score": 0,
+    "web_intelligence": {},
+    "status": "active",
+    "created_at": "2025-06-16T03:25:52.553Z",
+    "updated_at": "2025-06-16T03:25:52.558Z"
+  },
+  {
+    "id": "biz_1750044596049_akfl6h3sw",
+    "name": "Example",
+    "type": "custom",
+    "industry": "Rental Services",
+    "website": "https://example.com",
+    "email": "contact@example.com",
+    "phone": "+1-555-000-0000",
+    "address": "Address available on website",
+    "description": "Professional custom services",
+    "features": [
+      "Inventory Management",
+      "Customer Portal",
+      "Booking System",
+      "Payment Processing"
+    ],
+    "branding": {
+      "primaryColor": "#3B82F6",
+      "secondaryColor": "#10B981"
+    },
+    "confidence": 70,
+    "business_details": {},
+    "reputation_score": 86,
+    "web_intelligence": {
+      "reputationScore": 86,
+      "googleReviews": {
+        "rating": null,
+        "reviewCount": null
+      },
+      "socialMedia": {
+        "facebook": {},
+        "linkedin": {},
+        "instagram": {}
+      },
+      "onlinePresence": {
+        "industryListings": [],
+        "newsArticles": []
+      },
+      "competitorAnalysis": {
+        "marketPosition": "challenger",
+        "strengthsVsCompetitors": [],
+        "improvementAreas": []
+      },
+      "recommendations": [],
+      "overallSentiment": "neutral",
+      "lastUpdated": "2025-06-16T03:29:55.912Z"
+    },
+    "status": "active",
+    "created_at": "2025-06-16T03:29:56.049Z",
+    "updated_at": "2025-06-16T03:29:56.049Z"
+  },
+  {
+    "id": "biz_1750044774199_zvh00tzm2",
+    "name": "Houseofrental",
+    "type": "party_rental",
+    "industry": "Event & Party Services",
+    "website": "https://www.houseofrental.com/",
+    "email": "contact@www.houseofrental.com",
+    "phone": "847-677-2010",
+    "address": "Address available on website",
+    "description": "Professional party rental services",
+    "features": [
+      "Event Planning",
+      "Setup Services",
+      "Delivery & Pickup",
+      "Inventory Management",
+      "Customer Portal"
+    ],
+    "branding": {
+      "primaryColor": "#E91E63",
+      "secondaryColor": "#673AB7"
+    },
+    "confidence": 85,
+    "business_details": {},
+    "reputation_score": 77,
+    "web_intelligence": {
+      "reputationScore": 77,
+      "googleReviews": {
+        "rating": null,
+        "reviewCount": null
+      },
+      "socialMedia": {
+        "facebook": {},
+        "linkedin": {},
+        "instagram": {}
+      },
+      "onlinePresence": {
+        "industryListings": [],
+        "newsArticles": []
+      },
+      "competitorAnalysis": {
+        "marketPosition": "challenger",
+        "strengthsVsCompetitors": [],
+        "improvementAreas": []
+      },
+      "recommendations": [],
+      "overallSentiment": "neutral",
+      "lastUpdated": "2025-06-16T03:32:52.444Z"
+    },
+    "status": "active",
+    "created_at": "2025-06-16T03:32:54.201Z",
+    "updated_at": "2025-06-16T03:32:54.201Z"
+  }
+]
