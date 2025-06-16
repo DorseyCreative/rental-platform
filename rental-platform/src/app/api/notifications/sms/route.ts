@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import twilio from 'twilio'
+import { getTemplateMessage, type SMSTemplateType } from '@/lib/sms-templates'
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
@@ -10,24 +11,11 @@ const client = accountSid && authToken ? twilio(accountSid, authToken) : null
 interface SMSRequest {
   to: string
   message: string
-  type: 'rental_confirmation' | 'delivery_reminder' | 'pickup_reminder' | 'payment_due' | 'custom'
+  type: SMSTemplateType | 'custom'
   businessId: string
   rentalId?: string
 }
 
-const messageTemplates = {
-  rental_confirmation: (businessName: string, equipmentName: string, deliveryDate: string) =>
-    `🏗️ ${businessName}: Your rental of ${equipmentName} is confirmed for ${deliveryDate}. We'll send delivery updates soon!`,
-  
-  delivery_reminder: (businessName: string, equipmentName: string, timeWindow: string) =>
-    `🚚 ${businessName}: Your ${equipmentName} will be delivered today between ${timeWindow}. Please ensure someone is available on-site.`,
-  
-  pickup_reminder: (businessName: string, equipmentName: string, pickupDate: string) =>
-    `📦 ${businessName}: Pickup scheduled for ${equipmentName} on ${pickupDate}. Please have equipment ready and accessible.`,
-  
-  payment_due: (businessName: string, amount: string, dueDate: string) =>
-    `💳 ${businessName}: Payment of ${amount} is due by ${dueDate}. Pay online at [link] or call us.`,
-}
 
 export async function POST(request: Request) {
   try {
@@ -131,7 +119,7 @@ export async function PUT(request: Request) {
         results.push({
           phone: phoneNumber,
           success: false,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
         })
       }
     }
@@ -155,12 +143,3 @@ export async function PUT(request: Request) {
   }
 }
 
-// Helper function to get template message
-export function getTemplateMessage(
-  type: keyof typeof messageTemplates,
-  businessName: string,
-  ...args: string[]
-): string {
-  const template = messageTemplates[type]
-  return template ? template(businessName, ...args) : ''
-}

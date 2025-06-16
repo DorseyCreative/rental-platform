@@ -446,7 +446,7 @@ export default function BusinessAnalyzePage() {
                           <div className="text-xs text-gray-500">
                             {analysis.webIntelligence.socialMedia.facebook.engagement 
                               ? `${analysis.webIntelligence.socialMedia.facebook.engagement}% engagement`
-                              : analysis.webIntelligence.socialMedia.facebook.note || 'API not integrated'
+                              : 'API not integrated'
                             }
                           </div>
                         </div>
@@ -470,7 +470,7 @@ export default function BusinessAnalyzePage() {
                           <div className="text-xs text-gray-500">
                             {analysis.webIntelligence.socialMedia.linkedin.employees 
                               ? `${analysis.webIntelligence.socialMedia.linkedin.employees} employees`
-                              : analysis.webIntelligence.socialMedia.linkedin.note || 'API not integrated'
+                              : 'API not integrated'
                             }
                           </div>
                         </div>

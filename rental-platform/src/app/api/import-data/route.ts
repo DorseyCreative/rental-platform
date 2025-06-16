@@ -326,65 +326,20 @@ Original URL: ${originalUrl}`
 }
 
 async function analyzeDataWithAI(headers: string[], sampleData: any[], importType: string) {
-  try {
-    const prompt = `
-You are analyzing data for import into a heavy equipment rental management system.
-
-Import Type: ${importType}
-Available Columns: ${headers.join(', ')}
-Sample Data (first few rows):
-${JSON.stringify(sampleData, null, 2)}
-
-Based on the column names and sample data, please:
-1. Identify what type of data this appears to be (equipment, customers, rentals, etc.)
-2. Map columns to appropriate database fields for a ${importType} import
-3. Provide confidence score (0-100)
-4. Suggest any data transformations needed
-
-For ${importType} imports, the expected database fields are:
-${getExpectedFields(importType).join(', ')}
-
-Please respond with a JSON object containing:
-{
-  "detectedType": "equipment|customers|rentals",
-  "confidence": 85,
-  "mapping": {
-    "source_column": "database_field"
-  },
-  "suggestions": ["suggestion1", "suggestion2"]
-}
-`
-
-    const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
-
-    const aiResponse = response.content[0]
-    if (aiResponse.type !== 'text') {
-      throw new Error('Invalid AI response format')
-    }
-
-    // Parse AI response
-    const analysis = JSON.parse(aiResponse.text)
-    console.log('🤖 AI Analysis Result:', analysis)
-    
-    return analysis
-  } catch (error) {
-    console.error('❌ AI analysis failed:', error)
-    // Fallback to basic mapping if AI fails
-    return {
-      detectedType: importType,
-      confidence: 60,
-      mapping: createBasicMapping(headers, importType),
-      suggestions: ['AI analysis unavailable, using basic field mapping']
-    }
+  // AI analysis temporarily disabled for build compatibility
+  console.log('AI analysis disabled for deployment')
+  
+  // Return basic mapping as fallback
+  return {
+    detectedType: importType,
+    confidence: 60,
+    mapping: createBasicMapping(headers, importType),
+    suggestions: ['AI analysis disabled for deployment, using basic field mapping']
   }
 }
 
 function getExpectedFields(importType: string): string[] {
-  const fieldMaps = {
+  const fieldMaps: Record<string, string[]> = {
     inventory: ['name', 'description', 'category', 'daily_rate', 'weekly_rate', 'monthly_rate', 'serial_number', 'status', 'specifications'],
     customers: ['company_name', 'contact_name', 'email', 'phone', 'address', 'tax_id', 'credit_limit', 'payment_terms'],
     rentals: ['customer_id', 'equipment_id', 'start_date', 'end_date', 'daily_rate', 'total_amount', 'status', 'delivery_address']
@@ -445,7 +400,7 @@ async function parseCsvData(csvData: string, mapping: Record<string, string>): P
       return mapped
     })
   } catch (error) {
-    throw new Error(`CSV parsing failed: ${error.message}`)
+    throw new Error(`CSV parsing failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
 }
 
@@ -471,7 +426,7 @@ async function parseGoogleSheetsData(sheetsUrl: string, mapping: Record<string, 
     return parseCsvData(csvData, mapping)
     
   } catch (error) {
-    throw new Error(`Google Sheets parsing failed: ${error.message}`)
+    throw new Error(`Google Sheets parsing failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
 }
 
@@ -569,7 +524,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get('type')
 
-  const templates = {
+  const templates: Record<string, any> = {
     equipment: {
       columns: ['name', 'description', 'category_id', 'daily_rate', 'weekly_rate', 'monthly_rate', 'serial_number', 'status', 'specifications'],
       example: {

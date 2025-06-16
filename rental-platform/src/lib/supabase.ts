@@ -5,6 +5,17 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Service role client for server-side operations that bypass RLS
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+export const getServiceSupabase = () => {
+  if (!supabaseServiceKey) {
+    console.warn('SUPABASE_SERVICE_ROLE_KEY not configured, using anon client')
+    return supabase
+  }
+  return createClient(supabaseUrl, supabaseServiceKey)
+}
+
 // Database Schema Types
 export interface Business {
   id: string
